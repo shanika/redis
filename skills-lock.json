@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "architecture-docs": {
+      "source": "tecture-io/architecture-docs",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "c71872d19d3bda3a63c904c43b87b7671a225234f2b375dc3c67d2df6a473adc"
+    }
+  }
+}
