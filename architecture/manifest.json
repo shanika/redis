@@ -1,0 +1,8 @@
+{
+  "name": "Redis",
+  "description": "Redis is an in-memory data structure store used as a database, cache, message broker, and streaming engine. A single C process holds the entire keyspace in RAM and serves clients over the RESP protocol, supporting rich data types — strings, hashes, lists, sets, sorted sets, streams, and more — plus server-side Lua scripting and a C module API for extensibility.\n\nThe codebase is a monolithic server binary (redis-server) built from src/, accompanied by standalone command-line tools (redis-cli, redis-benchmark) and a high-availability monitor (redis-sentinel). Bundled dependencies under deps/ (jemalloc, Lua, hiredis, linenoise) and optional loadable modules under modules/ (RedisBloom, RediSearch, RedisJSON, RedisTimeSeries, vector-sets) extend the core.\n\nDurability comes from two on-disk mechanisms — point-in-time RDB snapshots and an append-only file (AOF) — while horizontal scale and availability come from primary/replica replication and Redis Cluster's slot-based sharding with a gossip bus between nodes.\n\nThis architecture documents the runtime shape: who talks to a Redis deployment, the binaries that make it up, and the major internal subsystems of the server process.",
+  "source": "https://github.com/shanika/redis",
+  "sourceHost": "github",
+  "topDiagram": "system-context",
+  "diagrams": ["system-context", "containers", "components-server", "components-command-keyspace"]
+}

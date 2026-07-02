@@ -1,0 +1,92 @@
+{
+  "name": "Containers",
+  "level": 2,
+  "meta": { "direction": "TB" },
+  "nodes": [
+    {
+      "id": "redis-server",
+      "label": "redis-server",
+      "path": "src/server.c",
+      "subDiagramId": "components-server",
+      "meta": { "type": "service", "technology": "c" }
+    },
+    {
+      "id": "redis-cli",
+      "label": "redis-cli",
+      "path": "src/redis-cli.c",
+      "meta": { "type": "service", "technology": "c" }
+    },
+    {
+      "id": "redis-benchmark",
+      "label": "redis-benchmark",
+      "path": "src/redis-benchmark.c",
+      "meta": { "type": "service", "technology": "c" }
+    },
+    {
+      "id": "redis-sentinel",
+      "label": "redis-sentinel",
+      "path": "src/sentinel.c",
+      "meta": { "type": "service", "technology": "c" }
+    },
+    {
+      "id": "loadable-modules",
+      "label": "Loadable Modules",
+      "path": "modules/",
+      "meta": { "type": "service", "technology": "c" }
+    },
+    {
+      "id": "persistence-files",
+      "label": "RDB & AOF Files",
+      "meta": { "type": "storage" }
+    },
+    {
+      "id": "peer-nodes",
+      "label": "Peer Redis Nodes",
+      "meta": { "type": "external", "technology": "redis" }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-cli-server",
+      "source": "redis-cli",
+      "target": "redis-server",
+      "label": "RESP commands over TCP/unix/TLS",
+      "meta": { "type": "calls" }
+    },
+    {
+      "id": "e-bench-server",
+      "source": "redis-benchmark",
+      "target": "redis-server",
+      "label": "RESP load test",
+      "meta": { "type": "calls" }
+    },
+    {
+      "id": "e-sentinel-server",
+      "source": "redis-sentinel",
+      "target": "redis-server",
+      "label": "monitors & orchestrates failover",
+      "meta": { "type": "calls" }
+    },
+    {
+      "id": "e-server-modules",
+      "source": "redis-server",
+      "target": "loadable-modules",
+      "label": "loads & invokes via Module API",
+      "meta": { "type": "calls" }
+    },
+    {
+      "id": "e-server-files",
+      "source": "redis-server",
+      "target": "persistence-files",
+      "label": "writes snapshots & append-only log",
+      "meta": { "type": "writes" }
+    },
+    {
+      "id": "e-server-peers",
+      "source": "redis-server",
+      "target": "peer-nodes",
+      "label": "replication stream & cluster bus",
+      "meta": { "type": "data-flow" }
+    }
+  ]
+}
