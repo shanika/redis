@@ -1,0 +1,106 @@
+{
+  "name": "Redis Server Components",
+  "level": 3,
+  "meta": { "direction": "TB" },
+  "nodes": [
+    {
+      "id": "request-processing",
+      "label": "Request Processing",
+      "meta": { "isContainer": true }
+    },
+    {
+      "id": "data-services",
+      "label": "Data Distribution & Durability",
+      "meta": { "isContainer": true }
+    },
+    {
+      "id": "event-loop-networking",
+      "label": "Event Loop & Networking",
+      "parentId": "request-processing",
+      "meta": { "type": "gateway", "technology": "c" }
+    },
+    {
+      "id": "command-keyspace",
+      "label": "Command Dispatch & Keyspace",
+      "parentId": "request-processing",
+      "subDiagramId": "components-command-keyspace",
+      "meta": { "type": "service", "technology": "c" }
+    },
+    {
+      "id": "embedded-execution",
+      "label": "Scripting & Module API",
+      "parentId": "request-processing",
+      "meta": { "type": "service", "technology": "lua" }
+    },
+    {
+      "id": "persistence-engine",
+      "label": "Persistence Engine (RDB & AOF)",
+      "parentId": "data-services",
+      "meta": { "type": "service", "technology": "c" }
+    },
+    {
+      "id": "replication-engine",
+      "label": "Replication",
+      "parentId": "data-services",
+      "path": "src/replication.c",
+      "meta": { "type": "service", "technology": "c" }
+    },
+    {
+      "id": "cluster-engine",
+      "label": "Cluster",
+      "parentId": "data-services",
+      "meta": { "type": "service", "technology": "c" }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-net-cmd",
+      "source": "event-loop-networking",
+      "target": "command-keyspace",
+      "label": "dispatches parsed RESP commands",
+      "meta": { "type": "calls" }
+    },
+    {
+      "id": "e-cmd-persist",
+      "source": "command-keyspace",
+      "target": "persistence-engine",
+      "label": "streams writes for durability",
+      "meta": { "type": "data-flow" }
+    },
+    {
+      "id": "e-cmd-repl",
+      "source": "command-keyspace",
+      "target": "replication-engine",
+      "label": "propagates write commands",
+      "meta": { "type": "data-flow" }
+    },
+    {
+      "id": "e-cmd-cluster",
+      "source": "command-keyspace",
+      "target": "cluster-engine",
+      "label": "consults slot routing",
+      "meta": { "type": "calls" }
+    },
+    {
+      "id": "e-cmd-embed",
+      "source": "command-keyspace",
+      "target": "embedded-execution",
+      "label": "runs Lua scripts & module commands",
+      "meta": { "type": "calls" }
+    },
+    {
+      "id": "e-repl-net",
+      "source": "replication-engine",
+      "target": "event-loop-networking",
+      "label": "streams backlog over replica links",
+      "meta": { "type": "data-flow" }
+    },
+    {
+      "id": "e-cluster-net",
+      "source": "cluster-engine",
+      "target": "event-loop-networking",
+      "label": "exchanges cluster-bus messages",
+      "meta": { "type": "data-flow" }
+    }
+  ]
+}

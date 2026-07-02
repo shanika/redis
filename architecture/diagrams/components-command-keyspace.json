@@ -1,0 +1,72 @@
+{
+  "name": "Command Dispatch & Keyspace Internals",
+  "level": 3,
+  "meta": { "direction": "TB" },
+  "nodes": [
+    {
+      "id": "command-dispatch",
+      "label": "Command Dispatch",
+      "meta": { "type": "gateway", "technology": "c" }
+    },
+    {
+      "id": "acl-auth",
+      "label": "ACL & Auth",
+      "path": "src/acl.c",
+      "meta": { "type": "service", "technology": "c" }
+    },
+    {
+      "id": "data-type-commands",
+      "label": "Data-Type Commands",
+      "meta": { "type": "service", "technology": "c" }
+    },
+    {
+      "id": "keyspace-db",
+      "label": "Keyspace & Databases",
+      "path": "src/db.c",
+      "meta": { "type": "service", "technology": "c" }
+    },
+    {
+      "id": "object-model",
+      "label": "Object Model",
+      "path": "src/object.c",
+      "meta": { "type": "service", "technology": "c" }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-dispatch-acl",
+      "source": "command-dispatch",
+      "target": "acl-auth",
+      "label": "checks permission before dispatch",
+      "meta": { "type": "calls" }
+    },
+    {
+      "id": "e-dispatch-types",
+      "source": "command-dispatch",
+      "target": "data-type-commands",
+      "label": "invokes c->cmd->proc handler",
+      "meta": { "type": "calls" }
+    },
+    {
+      "id": "e-types-db",
+      "source": "data-type-commands",
+      "target": "keyspace-db",
+      "label": "looks up & mutates keys",
+      "meta": { "type": "calls" }
+    },
+    {
+      "id": "e-types-object",
+      "source": "data-type-commands",
+      "target": "object-model",
+      "label": "creates & encodes values",
+      "meta": { "type": "calls" }
+    },
+    {
+      "id": "e-db-object",
+      "source": "keyspace-db",
+      "target": "object-model",
+      "label": "stores & returns robj values",
+      "meta": { "type": "calls" }
+    }
+  ]
+}
